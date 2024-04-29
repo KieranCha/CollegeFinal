@@ -28,8 +28,8 @@ namespace Task2Prototype
 
     static class DatabaseManager
     {
-        static string DBlocation = "C:\\Users\\EXAM1241\\OneDrive - Middlesbrough College\\Documents\\Kieran Chalmers\\Task 2\\Task2Prototype\\Task2Prototype\\Task2PrototypeDatabase.mdf";
-        static string ConnectionString =
+        static string DBlocation = "C:\\Users\\EXAM1241\\OneDrive - Middlesbrough College\\Documents\\Kieran Chalmers\\Task 2\\Task2Prototype\\Task2Prototype\\Task2PrototypeDatabase.mdf"; // this should be |DataDirectory| but that was causing errors so its hard coded
+        static string ConnectionString =                                                                                                                                                    // you'll have to change this to use on your local machine
             $"Server=(LocalDB)\\MSSQLLocalDB;" +
             $"Integrated Security=true;AttachDbFilename={DBlocation};";
 
