@@ -1,0 +1,9 @@
+CREATE TABLE [dbo].[Articles] (
+    [ArticleId]         INT             IDENTITY (1, 1) NOT NULL,
+    [Title]             NVARCHAR (255)  NOT NULL,
+    [Author]            NVARCHAR (255)  NOT NULL,
+    [Content]           NVARCHAR (2048) NOT NULL,
+    [EducatorExclusive] BIT             NOT NULL,
+    PRIMARY KEY CLUSTERED ([ArticleId] ASC)
+);
+

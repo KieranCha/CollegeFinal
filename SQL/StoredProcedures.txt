@@ -1,0 +1,143 @@
+-- these are saved as different files in the .mdf file but in one notepad for convience
+-- Auth-User
+CREATE PROCEDURE [dbo].[Auth-User]
+	@Username Char(255),
+	@Password Char(255)
+AS
+	SELECT Id FROM Users 
+	where Name = @Username AND
+    Password = HASHBYTES('SHA2_256', @Password)
+
+-- Count-Articles
+CREATE PROCEDURE [dbo].[Count-Articles]
+AS
+	SELECT Count(*) FROM Articles
+
+-- Count-Bookings
+CREATE PROCEDURE [dbo].[Count-Bookings]
+	@userID int
+AS
+	SELECT Count(*)
+	FROM Bookings WHERE Id = @userID
+RETURN 0
+
+-- Create-Article
+CREATE PROCEDURE [dbo].[Create-Article]
+	@Title Char(255),
+	@Content Char(255),
+	@Author Char(255),
+	@EducatorExclusive Bit
+AS
+	INSERT INTO Articles VALUES(@Title, @Author, @Content, @EducatorExclusive)
+RETURN 0
+
+-- Create-Booking
+CREATE PROCEDURE [dbo].[Create-Booking]
+	@DateStart Char(255),
+	@DateEnd Char(255),
+	@HotelSelection Char(255),
+	@Price int,
+	@StandardTickets int,
+	@ChildTickets int,
+	@UserId int
+AS
+	INSERT INTO Bookings VALUES(@UserId, @DateStart, @DateEnd, @HotelSelection, @Price, @StandardTickets, @ChildTickets)
+	UPDATE Users
+	SET HasBookings = 1
+	Where Id = @UserId
+RETURN 0
+
+-- Create-PaymentInfo
+CREATE PROCEDURE [dbo].[Create-PaymentInfo]
+	@Csv Char(255),
+	@CardNumber Char(255),
+	@CardHolderName Char(255),
+	@CardExpiryDate Char(255),
+	@UserId Int
+AS
+	INSERT INTO PaymentInformation VALUES(@UserId, @Csv, @CardNumber, @CardHolderName, @CardExpiryDate)
+	UPDATE Users
+	SET PaymentLinked = 1
+	Where Id = @UserId
+RETURN 0
+
+-- Create-User
+CREATE PROCEDURE [dbo].[Create-User]
+	@Name Char(255),
+	@Password Char(255),
+	@Educator Bit = 0
+AS
+	INSERT INTO Users(Name, Password, Educator) VALUES(@Name, HASHBYTES('SHA2_256', @Password), @Educator)
+RETURN 0
+
+-- Delete-Booking
+CREATE PROCEDURE [dbo].[Delete-Booking]
+	@BookingId int,
+	@userId int
+AS
+	Delete from Bookings where 
+	BookingId = @BookingId
+	Update Users 
+	Set HasBookings = 
+	IIF(EXISTS(select BookingId from Bookings where Id = @userId), 1, 0) -- Changes users HasBookings value to false if it no longer has any bookings related to it using Exists() function
+RETURN 0
+
+-- Find-Article
+CREATE PROCEDURE [dbo].[Find-Article]
+	@Id int
+AS
+	SELECT Title, Author, Content, EducatorExclusive FROM Articles
+	where ArticleId = @Id
+RETURN 0
+
+-- Find-User
+CREATE PROCEDURE [dbo].[Find-User]
+	@Id int = 0
+AS
+	SELECT Id, Name, HasBookings, LoyaltyPoints, PaymentLinked, Educator
+	From Users 
+	Where Id = @Id
+
+-- Find-UserBookings
+CREATE PROCEDURE [dbo].[Find-UserBookings]
+	@Id Int
+AS
+	SELECT DateStart, DateEnd, HotelSelection, Price, StandardTickets, ChildTickets
+	From Bookings
+	Where Id = @Id
+
+-- Find-UserPaymentInfo
+CREATE PROCEDURE [dbo].[Find-UserPaymentInfo]
+	@Id INT
+AS
+	SELECT CSV, CardNumber, CardHolderName, CardExpiryDate
+	FROM PaymentInformation
+	Where Id = @Id
+
+-- Search-Article
+CREATE PROCEDURE [dbo].[Search-Article]
+	@SearchQuery NvarChar(255)
+AS
+	SELECT Title, Author, ArticleId, EducatorExclusive, SUBSTRING(Content, 1, 128) AS TextPreview FROM Articles
+	WHERE Title LIKE '%' + @SearchQuery + '%'
+	OR Author LIKE '%' + @SearchQuery + '%' 
+	OR @SearchQuery = '*'  -- Looks ugly but using contains was causing update to fail >:(
+
+--  Update-User
+CREATE PROCEDURE [dbo].[Update-User]
+	@UserId Int,
+	@Name Char(255) = null,
+	@Password Char(255) = null,
+	@LoyaltyPoints int = null
+AS
+	Update Users 
+	Set
+	Name = Coalesce(@Name, Name),
+	Password = Coalesce(@Password, Password),
+	LoyaltyPoints = Coalesce(@LoyaltyPoints, LoyaltyPoints)
+	Where @UserId = Id
+RETURN 0
+
+
+
+

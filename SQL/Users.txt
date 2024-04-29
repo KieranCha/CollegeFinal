@@ -1,0 +1,12 @@
+CREATE TABLE [dbo].[Users] (
+    [Id]            INT        IDENTITY (1, 1) NOT NULL,
+    [Name]          CHAR (255) NOT NULL,
+    [Password]      CHAR (255) NOT NULL,
+    [HasBookings]   BIT        DEFAULT ((0)) NOT NULL,
+    [LoyaltyPoints] INT        DEFAULT ((0)) NOT NULL,
+    [PaymentLinked] BIT        DEFAULT ((0)) NOT NULL,
+    [Educator]      BIT        DEFAULT ((0)) NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [AK_Name] UNIQUE NONCLUSTERED ([Name] ASC)
+);
+

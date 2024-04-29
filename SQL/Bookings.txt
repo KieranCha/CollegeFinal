@@ -1,0 +1,13 @@
+CREATE TABLE [dbo].[Bookings] (
+    [Id]              INT            NULL,
+    [BookingId]       INT            IDENTITY (1, 1) NOT NULL,
+    [DateStart]       NVARCHAR (255) NOT NULL,
+    [DateEnd]         NVARCHAR (255) NOT NULL,
+    [HotelSelection]  NVARCHAR (255) NULL,
+    [Price]           INT            NOT NULL,
+    [StandardTickets] INT            NOT NULL,
+    [ChildTickets]    INT            NOT NULL,
+    PRIMARY KEY CLUSTERED ([BookingId] ASC),
+    FOREIGN KEY ([Id]) REFERENCES [dbo].[Users] ([Id])
+);
+

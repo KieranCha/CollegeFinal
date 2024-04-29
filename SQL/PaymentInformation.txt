@@ -1,0 +1,9 @@
+CREATE TABLE [dbo].[PaymentInformation] (
+    [Id]             INT        NULL,
+    [CSV]            CHAR (255) NOT NULL,
+    [CardNumber]     CHAR (255) NOT NULL,
+    [CardHolderName] CHAR (255) NOT NULL,
+    [CardExpiryDate] CHAR (255) NOT NULL,
+    FOREIGN KEY ([Id]) REFERENCES [dbo].[Users] ([Id])
+);
+
