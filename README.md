@@ -1,3 +1,5 @@
+-- CHANGE DATABASE LOCATION YOURSELF --
+
 Final project for my College course
 It is a windows form software that is a prototype for a Zoo booking service
 Users are able to access a wide range of articles, both educational and leisurely
